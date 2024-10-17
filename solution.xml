@@ -1,0 +1,110 @@
+<ImportExportXml version="9.2.24052.196" SolutionPackageVersion="9.2" languagecode="3082" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SolutionManifest>
+    <UniqueName>COMPLEX_APP</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="COMPLEX_APP" languagecode="3082" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>1.0.0.20</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>Cr53bc0</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="CDS Default Publisher" languagecode="3082" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress xsi:nil="true"></EMailAddress>
+      <SupportingWebsiteUrl xsi:nil="true"></SupportingWebsiteUrl>
+      <CustomizationPrefix>cr478</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>33929</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode xsi:nil="true"></AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode xsi:nil="true"></ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+        <Address>
+          <AddressNumber>2</AddressNumber>
+          <AddressTypeCode xsi:nil="true"></AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode xsi:nil="true"></ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="1" schemaName="cr478_clientes" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_configuracionescomplex" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_lineasdenegocio" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_movimientos" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_noserie" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_ordenesautoclave" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_ordenesconsumo" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_ordenesempaquetado" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_ordenesexpedicion" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_ordenesrecepcion" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_pedidoclienteexpedicion" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_planesdecultivo" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_productos" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_proveedores" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_relacioncalibrado" behavior="0" />
+      <RootComponent type="1" schemaName="cr478_traducciones" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_autoclave" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_envasadora" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_estado" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_origen" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_tipo" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_tipocliente" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_tipomovimiento" behavior="0" />
+      <RootComponent type="9" schemaName="cr478_tipoorden" behavior="0" />
+      <RootComponent type="29" id="{52e138b0-da23-ef11-840a-000d3ab4a40d}" behavior="0" />
+      <RootComponent type="29" id="{c1403bbe-9821-ef11-840a-000d3ab4a40d}" behavior="0" />
+      <RootComponent type="300" schemaName="cr478_complexapp_e3a24" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+  </SolutionManifest>
+</ImportExportXml>

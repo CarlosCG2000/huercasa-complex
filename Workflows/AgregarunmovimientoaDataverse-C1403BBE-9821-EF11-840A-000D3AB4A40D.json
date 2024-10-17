@@ -1,0 +1,188 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cr478_sharedcommondataserviceforapps_91289"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "f8cb0354-3ea9-48c9-ba28-46f43d7f6ea4"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text_2": {
+                  "title": "varNoOrden",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Registro movimiento a registrar en Dataverse",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "number": {
+                  "title": "varMovimiento",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escriba un número.",
+                  "x-ms-content-hint": "NUMBER"
+                },
+                "number_1": {
+                  "title": "varBarcode",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escriba un número.",
+                  "x-ms-content-hint": "NUMBER"
+                },
+                "number_2": {
+                  "title": "Cajas",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escriba un número.",
+                  "x-ms-content-hint": "NUMBER"
+                },
+                "number_3": {
+                  "title": "varLineaProducto",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escriba un número.",
+                  "x-ms-content-hint": "NUMBER"
+                },
+                "text": {
+                  "title": "varIdProducto",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escribir entrada",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "varNoLote",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escribir entrada",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "date": {
+                  "title": "Fecha del Caducidad",
+                  "type": "string",
+                  "format": "date",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escriba o seleccione una fecha (AAAA-MM-DD).",
+                  "x-ms-content-hint": "DATE"
+                },
+                "number_4": {
+                  "title": "Unidades",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escriba un número.",
+                  "x-ms-content-hint": "NUMBER"
+                },
+                "number_5": {
+                  "title": "Peso",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "Escriba un número.",
+                  "x-ms-content-hint": "NUMBER"
+                }
+              },
+              "required": [
+                "text_2",
+                "number",
+                "number_1",
+                "number_2",
+                "number_3",
+                "text",
+                "text_1",
+                "date",
+                "number_4",
+                "number_5"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Agregar_una_fila_nueva": {
+          "runAfter": {
+            "Obtener_una_fila_por_id": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2943cbaf-fc54-40eb-ae42-9a1a40dec600"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cr478_movimientoses",
+              "item/cr478_name": "@triggerBody()['number']",
+              "item/cr478_barcode": "@triggerBody()['number_1']",
+              "item/cr478_cajas": "@triggerBody()['number_2']",
+              "item/cr478_fecha": "@utcNow()",
+              "item/cr478_fechacaducidad": "@triggerBody()['date']",
+              "item/cr478_nolote": "@triggerBody()['text_1']",
+              "item/cr478_noorden": "@triggerBody()['text_2']",
+              "item/cr478_NoProducto@odata.bind": "@outputs('Obtener_una_fila_por_id')?['body/@odata.id']",
+              "item/cr478_numerolineapedido": "@triggerBody()['number_3']",
+              "item/cr478_palet": "@triggerBody()['number_1']",
+              "item/cr478_peso": "@triggerBody()['number_5']",
+              "item/cr478_tipomovimiento": 2,
+              "item/cr478_tipoorden": 5,
+              "item/cr478_unidades": "@triggerBody()['number_4']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Obtener_una_fila_por_id": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "6601b0d2-d16b-4748-89af-7e6c8b2335b6"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cr478_productoses",
+              "recordId": "@triggerBody()['text']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": "078e968e25814389b7818d07da8ef789"
+  },
+  "schemaVersion": "1.0.0.0"
+}

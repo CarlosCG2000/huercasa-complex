@@ -1,0 +1,606 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cr478_sharedcommondataserviceforapps_91289"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "95047f7b-504e-4fee-a934-39959febef5e"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "varID_LineaPed",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Title of the notification",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Inicializar_Variable__HTML": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "d176f27f-8620-4173-9b96-84ba7227f8d4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varMovimientosHTML",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Inicializar_variable_OBJETO": {
+          "runAfter": {
+            "Inicializar_Variable__HTML": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8784d698-054f-4f7b-8ef1-17094ccab83c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varMovimientoIndivObjeto",
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "Obtener_Linea_Pedido_por_ID": {
+          "runAfter": {
+            "Inicializar_variable_OBJETO": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a246830-0a8b-4d07-aa0c-02e61b3ac03b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cr478_pedidoclienteexpedicions",
+              "recordId": "@triggerBody()['text']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Listado_Movimientos_filtrando_la_Linea_Pedido": {
+          "runAfter": {
+            "Obtener_Linea_Pedido_por_ID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a72d705d-f820-4dc4-ae64-34aa1eab9d0c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cr478_movimientoses",
+              "$filter": "cr478_numerolineapedido eq @{int(outputs('Obtener_Linea_Pedido_por_ID')?['body/cr478_name'])}"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Aplicar_a_cada_uno": {
+          "foreach": "@outputs('Listado_Movimientos_filtrando_la_Linea_Pedido')?['body/value']",
+          "actions": {
+            "Establecer_variable_OBJETO": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ad70a180-38da-4469-8658-49afc76572e0"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "varMovimientoIndivObjeto",
+                "value": "@items('Aplicar_a_cada_uno')"
+              }
+            },
+            "Análisis_del_archivo_JSON": {
+              "runAfter": {
+                "Establecer_variable_OBJETO": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7c185499-bae2-4543-9954-2fcdd73ba824"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@variables('varMovimientoIndivObjeto')",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "@@odata.type": {
+                      "type": "string"
+                    },
+                    "@@odata.id": {
+                      "type": "string"
+                    },
+                    "@@odata.etag": {
+                      "type": "string"
+                    },
+                    "@@odata.editLink": {
+                      "type": "string"
+                    },
+                    "statecode@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "statecode": {
+                      "type": "integer"
+                    },
+                    "cr478_unidades@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_unidades": {
+                      "type": "integer"
+                    },
+                    "statuscode@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "statuscode": {
+                      "type": "integer"
+                    },
+                    "cr478_palet@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_palet": {
+                      "type": "integer"
+                    },
+                    "cr478_tipomovimiento@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_tipomovimiento": {
+                      "type": "integer"
+                    },
+                    "_ownerid_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_ownerid_value@Microsoft.Dynamics.CRM.associatednavigationproperty": {
+                      "type": "string"
+                    },
+                    "_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_ownerid_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_ownerid_value": {
+                      "type": "string"
+                    },
+                    "modifiedon@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "modifiedon@odata.type": {
+                      "type": "string"
+                    },
+                    "modifiedon": {
+                      "type": "string"
+                    },
+                    "cr478_cierrepalet@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_cierrepalet": {
+                      "type": "boolean"
+                    },
+                    "cr478_peso@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_peso@odata.type": {
+                      "type": "string"
+                    },
+                    "cr478_peso": {
+                      "type": "integer"
+                    },
+                    "versionnumber@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "versionnumber@odata.type": {
+                      "type": "string"
+                    },
+                    "versionnumber": {
+                      "type": "integer"
+                    },
+                    "cr478_fecha@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_fecha@odata.type": {
+                      "type": "string"
+                    },
+                    "cr478_fecha": {
+                      "type": "string"
+                    },
+                    "createdon@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "createdon@odata.type": {
+                      "type": "string"
+                    },
+                    "createdon": {
+                      "type": "string"
+                    },
+                    "cr478_movimientosid@odata.type": {
+                      "type": "string"
+                    },
+                    "cr478_movimientosid": {
+                      "type": "string"
+                    },
+                    "cr478_fechacaducidad@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_fechacaducidad@odata.type": {
+                      "type": "string"
+                    },
+                    "cr478_fechacaducidad": {
+                      "type": "string"
+                    },
+                    "timezoneruleversionnumber@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "timezoneruleversionnumber": {
+                      "type": "integer"
+                    },
+                    "_modifiedby_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_modifiedby_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_modifiedby_value": {
+                      "type": "string"
+                    },
+                    "cr478_nolote": {
+                      "type": "string"
+                    },
+                    "_cr478_noproducto_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_cr478_noproducto_value@Microsoft.Dynamics.CRM.associatednavigationproperty": {
+                      "type": "string"
+                    },
+                    "_cr478_noproducto_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_cr478_noproducto_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_cr478_noproducto_value": {
+                      "type": "string"
+                    },
+                    "cr478_noorden": {
+                      "type": "string"
+                    },
+                    "cr478_numerolineapedido@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_numerolineapedido": {
+                      "type": "integer"
+                    },
+                    "cr478_barcode@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_barcode": {
+                      "type": "integer"
+                    },
+                    "cr478_cajas@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_cajas@odata.type": {
+                      "type": "string"
+                    },
+                    "cr478_cajas": {
+                      "type": "integer"
+                    },
+                    "_createdby_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_createdby_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_createdby_value": {
+                      "type": "string"
+                    },
+                    "cr478_name": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value@Microsoft.Dynamics.CRM.associatednavigationproperty": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value": {
+                      "type": "string"
+                    },
+                    "_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_owninguser_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_owninguser_value": {
+                      "type": "string"
+                    },
+                    "cr478_tipoorden@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "cr478_tipoorden": {
+                      "type": "integer"
+                    },
+                    "ownerid@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "ownerid@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_NoProducto@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_NoProducto@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "owningbusinessunit@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "owningbusinessunit@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "createdby@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "createdby@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "createdonbehalfby@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "createdonbehalfby@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "modifiedby@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "modifiedby@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "modifiedonbehalfby@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "modifiedonbehalfby@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "owninguser@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "owninguser@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "owningteam@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "owningteam@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_SyncErrors@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_SyncErrors@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_DuplicateMatchingRecord@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_DuplicateMatchingRecord@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_DuplicateBaseRecord@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_DuplicateBaseRecord@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_AsyncOperations@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_AsyncOperations@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_MailboxTrackingFolders@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_MailboxTrackingFolders@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_UserEntityInstanceDatas@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_UserEntityInstanceDatas@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_ProcessSession@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_ProcessSession@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_BulkDeleteFailures@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_BulkDeleteFailures@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_PrincipalObjectAttributeAccesses@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_movimientos_PrincipalObjectAttributeAccesses@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_LineaNegocio@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_LineaNegocio@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_NoAgricultor@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_NoAgricultor@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_NoPlanCultivo@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_NoPlanCultivo@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "cr478_OrdenConsumo@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "cr478_OrdenConsumo@odata.navigationLink": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "Anexar_a_la_variable_de_cadena": {
+              "runAfter": {
+                "Análisis_del_archivo_JSON": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "78c83ed0-c7b6-4895-95d0-4763c6088206"
+              },
+              "type": "AppendToStringVariable",
+              "inputs": {
+                "name": "varMovimientosHTML",
+                "value": "<tr>\n   <td style=\"border: 1px solid black; padding: 2px;\">@{body('Análisis_del_archivo_JSON')?['cr478_palet']}</td>\n    <td style=\"border: 1px solid black; padding: 2px;\">@{body('Análisis_del_archivo_JSON')?['_cr478_noproducto_value@OData.Community.Display.V1.FormattedValue']}</td>\n    <td style=\"border: 1px solid black; padding: 2px;\">@{body('Análisis_del_archivo_JSON')?['cr478_nolote']}</td>\n    <td style=\"border: 1px solid black; padding: 2px;\">@{body('Análisis_del_archivo_JSON')?['cr478_cajas']}</td>\n    <td style=\"border: 1px solid black; padding: 2px;\"> @{body('Análisis_del_archivo_JSON')?['cr478_unidades']} </td>\n     <td style=\"border: 1px solid black; padding: 2px;\"> @{body('Análisis_del_archivo_JSON')?['cr478_peso']}</td>\n     <td style=\"border: 1px solid black; padding: 2px;\"> @{body('Análisis_del_archivo_JSON')?['cr478_fechacaducidad@OData.Community.Display.V1.FormattedValue']}</td>\n</tr>\n"
+              }
+            }
+          },
+          "runAfter": {
+            "Listado_Movimientos_filtrando_la_Linea_Pedido": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6d7163b6-e25a-4356-b8e2-2b1cffa00575"
+          },
+          "type": "Foreach"
+        },
+        "Inicializar_variable_FINAL": {
+          "runAfter": {
+            "Aplicar_a_cada_uno": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a9ec9cb7-8dc7-48e7-a388-f18e4db512c7"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varFinalMoviHTML",
+                "type": "string",
+                "value": "@variables('varMovimientosHTML')"
+              }
+            ]
+          }
+        },
+        "Respond_to_a_Power_App_or_flow": {
+          "runAfter": {
+            "Inicializar_variable_FINAL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "30e940ea-2068-46c0-a821-487c361e7757"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "varmovhtml": "@variables('varFinalMoviHTML')"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "varmovhtml": {
+                  "title": "varMovHTML",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": "52f77e0cde234231903129fce1327763"
+  },
+  "schemaVersion": "1.0.0.0"
+}
